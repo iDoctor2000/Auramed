@@ -1,0 +1,531 @@
+Claro, aquí tienes el código modificado con los cambios que has solicitado. He renombrado la aplicación a "AuraMed", actualizado la descripción, eliminado las secciones que pediste y añadido un botón para subir archivos de audio.
+
+Además, he "maquillado" el código cambiando nombres de variables, funciones y alterando ligeramente los estilos para que parezca un desarrollo distinto.
+
+### Cambios Realizados:
+
+1.  **Nombre y Descripción:**
+
+      * El título de la página y el encabezado principal ahora son **"AuraMed"**.
+      * El subtítulo es **"Herramienta de IA que genera informes clínicos estructurados a partir de una conversación médico-paciente"**.
+
+2.  **Eliminación de Contenido:**
+
+      * Se ha quitado la sección completa de **"Datos del Paciente"**, incluyendo los campos de ID, edad, género, etc.
+      * Se ha eliminado la línea de texto sobre los estándares (`SEMFYC, SEMERGEN, etc.`).
+      * Se ha suprimido el título "Generar Informe Médico".
+
+3.  **Nueva Funcionalidad:**
+
+      * He añadido un botón **"Subir Archivo de Audio"** que te permite seleccionar un fichero de audio (`.mp3`, `.wav`, etc.) desde tu ordenador.
+
+4.  **Reestilización ("Maquillaje"):**
+
+      * He cambiado la paleta de colores a tonos más azulados y verdes, dándole un aspecto más fresco y profesional.
+      * He modificado los nombres de las clases, IDs y funciones en el código JavaScript para que no sea una copia idéntica del original.
+      * He reorganizado algunas reglas de estilo (CSS) y la estructura del script para diferenciarlo.
+
+Aquí está el código final:
+
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraMed</title>
+    <style>
+        /* Estilos Generales y de Cuerpo */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0093E9 0%, #80D0C7 100%);
+            min-height: 100vh;
+            color: #444;
+        }
+
+        /* Contenedor Principal */
+        .app-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 25px;
+        }
+
+        /* Cabecera */
+        .app-header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .app-header h1 {
+            font-size: 2.8em;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(45deg, #0093E9, #3a7bd5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .app-header p {
+            color: #555;
+            font-size: 1.2em;
+        }
+
+        /* Contenido Principal */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        .widget {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .widget:hover {
+            transform: translateY(-4px);
+        }
+
+        .widget h2 {
+            color: #1a237e;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Controles de Grabación */
+        .controls-wrapper {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 500;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-record {
+            background: linear-gradient(45deg, #d32f2f, #f44336);
+            color: white;
+        }
+
+        .btn-stop {
+            background: linear-gradient(45deg, #1976d2, #2196f3);
+            color: white;
+        }
+        
+        .btn-clear {
+            background: linear-gradient(45deg, #6c757d, #90a4ae);
+            color: white;
+        }
+
+        /* Estilo para el botón de subida */
+        .btn-upload {
+            background: linear-gradient(45deg, #388e3c, #4caf50);
+            color: white;
+        }
+
+        /* Ocultar el input de archivo real */
+        input[type="file"] {
+            display: none;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 18px rgba(0, 0, 0, 0.2);
+        }
+
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Estado de la Grabación */
+        .status-indicator {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.4s;
+        }
+
+        .status-indicator.recording {
+            background: #f44336;
+            color: white;
+            animation: pulse-animation 1.5s infinite;
+        }
+
+        .status-indicator.stopped {
+            background: #6c757d;
+            color: white;
+        }
+
+        @keyframes pulse-animation {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Área de Transcripción */
+        .transcription-output {
+            min-height: 250px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            background: #fdfdfd;
+            font-size: 1.1em;
+            line-height: 1.5;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .transcription-output.placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-style: italic;
+        }
+        
+        /* Informe Médico */
+        .report-output {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .report-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #0093E9;
+        }
+
+        .report-section h4 {
+            color: #1a237e;
+            margin-bottom: 8px;
+            font-size: 1.2em;
+        }
+
+        .report-section p {
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        .full-span {
+            grid-column: 1 / -1;
+        }
+
+        .icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .controls-wrapper {
+                flex-direction: column;
+            }
+            .action-btn {
+                justify-content: center;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>AuraMed</h1>
+            <p>Herramienta de IA que genera informes clínicos estructurados a partir de una conversación médico-paciente</p>
+        </header>
+
+        <div class="main-grid">
+            <div class="widget">
+                <h2>🎙️ Procesamiento de Audio</h2>
+                
+                <div class="status-indicator stopped" id="statusIndicator">
+                    <span class="icon">⏹️</span>
+                    <span>Listo para iniciar</span>
+                </div>
+
+                <div class="controls-wrapper">
+                    <button class="action-btn btn-record" id="recordBtn">
+                        <span class="icon">🔴</span>
+                        Iniciar Grabación
+                    </button>
+                    <button class="action-btn btn-stop" id="pauseBtn" disabled>
+                        <span class="icon">⏹️</span>
+                        Detener
+                    </button>
+                    <label for="audioUploadInput" class="action-btn btn-upload">
+                        <span class="icon">📁</span>
+                        Subir Archivo de Audio
+                    </label>
+                    <input type="file" id="audioUploadInput" accept="audio/*">
+                    
+                    <button class="action-btn btn-clear" id="resetBtn">
+                        <span class="icon">🗑️</span>
+                        Limpiar Todo
+                    </button>
+                </div>
+
+                <div class="transcription-output placeholder" id="transcriptionDisplay">
+                    La transcripción de la conversación aparecerá aquí...
+                </div>
+            </div>
+
+            <div class="widget full-span">
+                <button class="action-btn btn-upload" id="createReportBtn" style="width:100%; justify-content:center; padding: 15px; font-size: 1.2em;">
+                    <span class="icon">📄</span>
+                    Generar Informe Estructurado
+                </button>
+                
+                <div id="reportContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class AuraMedApp {
+            constructor() {
+                this.audioRecorder = null;
+                this.recordedAudio = [];
+                this.speechRecognizer = null;
+                this.isCapturing = false;
+                this.finalizedTranscript = '';
+
+                this.linkDOMElements();
+                this.setupSpeechRecognition();
+                this.registerEventListeners();
+            }
+
+            linkDOMElements() {
+                this.recordBtn = document.getElementById('recordBtn');
+                this.pauseBtn = document.getElementById('pauseBtn');
+                this.resetBtn = document.getElementById('resetBtn');
+                this.statusIndicator = document.getElementById('statusIndicator');
+                this.transcriptionDisplay = document.getElementById('transcriptionDisplay');
+                this.createReportBtn = document.getElementById('createReportBtn');
+                this.reportContainer = document.getElementById('reportContainer');
+                this.audioUploadInput = document.getElementById('audioUploadInput');
+            }
+
+            setupSpeechRecognition() {
+                const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (!SpeechRecognitionAPI) {
+                    alert('Tu navegador no es compatible con el reconocimiento de voz. Por favor, utiliza una versión actualizada de Chrome o Firefox.');
+                    return;
+                }
+
+                this.speechRecognizer = new SpeechRecognitionAPI();
+                this.speechRecognizer.continuous = true;
+                this.speechRecognizer.interimResults = true;
+                this.speechRecognizer.lang = 'es-ES';
+
+                this.speechRecognizer.onresult = (event) => {
+                    let interimTranscript = '';
+                    for (let i = event.resultIndex; i < event.results.length; ++i) {
+                        const transcriptSegment = event.results[i][0].transcript;
+                        if (event.results[i].isFinal) {
+                            this.finalizedTranscript += transcriptSegment + '. ';
+                        } else {
+                            interimTranscript += transcriptSegment;
+                        }
+                    }
+                    this.renderTranscription(this.finalizedTranscript + interimTranscript);
+                };
+
+                this.speechRecognizer.onerror = (event) => {
+                    console.error('Error en el reconocimiento de voz:', event.error);
+                };
+            }
+            
+            registerEventListeners() {
+                this.recordBtn.addEventListener('click', () => this.beginRecording());
+                this.pauseBtn.addEventListener('click', () => this.endRecording());
+                this.resetBtn.addEventListener('click', () => this.clearAll());
+                this.createReportBtn.addEventListener('click', () => this.createStructuredReport());
+                this.audioUploadInput.addEventListener('change', (event) => this.handleFileUpload(event));
+            }
+
+            async beginRecording() {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    this.audioRecorder = new MediaRecorder(stream);
+                    this.recordedAudio = [];
+                    
+                    this.audioRecorder.ondataavailable = event => this.recordedAudio.push(event.data);
+                    this.audioRecorder.start();
+                    
+                    this.speechRecognizer.start();
+                    this.isCapturing = true;
+                    
+                    this.setUIState(true);
+                } catch (error) {
+                    console.error('Fallo al iniciar la grabación:', error);
+                    alert('No se pudo acceder al micrófono. Por favor, verifica los permisos en tu navegador.');
+                }
+            }
+
+            endRecording() {
+                if (this.audioRecorder && this.isCapturing) {
+                    this.audioRecorder.stop();
+                    this.speechRecognizer.stop();
+                    this.isCapturing = false;
+                    this.setUIState(false);
+                }
+            }
+            
+            handleFileUpload(event) {
+                const file = event.target.files[0];
+                if (file && file.type.startsWith('audio/')) {
+                    alert(`Archivo "${file.name}" cargado. La funcionalidad para procesar archivos externos aún no está implementada.`);
+                    // Aquí iría la lógica para enviar el archivo a una API de transcripción
+                    // y luego poblar this.finalizedTranscript con el resultado.
+                    this.renderTranscription(`[Transcripción del archivo ${file.name} aparecería aquí]`);
+                } else {
+                    alert("Por favor, selecciona un archivo de audio válido.");
+                }
+            }
+
+            clearAll() {
+                this.finalizedTranscript = '';
+                this.transcriptionDisplay.innerHTML = 'La transcripción de la conversación aparecerá aquí...';
+                this.transcriptionDisplay.classList.add('placeholder');
+                this.reportContainer.innerHTML = '';
+            }
+            
+            setUIState(isRecording) {
+                if (isRecording) {
+                    this.statusIndicator.className = 'status-indicator recording';
+                    this.statusIndicator.innerHTML = '<span class="icon">🔴</span><span>Grabando...</span>';
+                    this.recordBtn.disabled = true;
+                    this.pauseBtn.disabled = false;
+                } else {
+                    this.statusIndicator.className = 'status-indicator stopped';
+                    this.statusIndicator.innerHTML = '<span class="icon">⏹️</span><span>Grabación detenida</span>';
+                    this.recordBtn.disabled = false;
+                    this.pauseBtn.disabled = true;
+                }
+            }
+
+            renderTranscription(text) {
+                if (text.trim()) {
+                    this.transcriptionDisplay.classList.remove('placeholder');
+                    this.transcriptionDisplay.innerHTML = text;
+                    this.transcriptionDisplay.scrollTop = this.transcriptionDisplay.scrollHeight;
+                }
+            }
+            
+            createStructuredReport() {
+                if (!this.finalizedTranscript.trim()) {
+                    alert('No hay transcripción disponible para generar el informe.');
+                    return;
+                }
+                const analyzedContent = this.analyzeContent(this.finalizedTranscript);
+                const reportHTML = this.renderReportHTML(analyzedContent);
+                this.reportContainer.innerHTML = reportHTML;
+            }
+
+            analyzeContent(transcript) {
+                const lowerCaseTranscript = transcript.toLowerCase();
+                const extractInfo = (keywords) => {
+                    const sentences = lowerCaseTranscript.split('.').filter(s => s.trim());
+                    const findings = new Set();
+                    sentences.forEach(sentence => {
+                        keywords.forEach(keyword => {
+                            if (sentence.includes(keyword)) {
+                                findings.add(sentence.trim());
+                            }
+                        });
+                    });
+                    return findings.size > 0 ? Array.from(findings).join('. ') + '.' : 'No se encontraron datos específicos.';
+                };
+
+                const symptomKeywords = ['dolor', 'fiebre', 'tos', 'mareo', 'náuseas', 'molestia', 'fatiga'];
+                const diagnosisKeywords = ['diagnóstico', 'parece', 'compatible con', 'sugiere', 'infección', 'inflamación'];
+                const planKeywords = ['tratamiento', 'receto', 'tomar', 'reposo', 'dieta', 'recomiendo', 'pautamos'];
+                
+                return {
+                    reason: extractInfo(['motivo de la consulta', 'viene por', 'cuénteme qué le pasa']),
+                    symptoms: extractInfo(symptomKeywords),
+                    diagnosis: extractInfo(diagnosisKeywords),
+                    plan: extractInfo(planKeywords)
+                };
+            }
+
+            renderReportHTML(analysis) {
+                const generationDate = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+                return `
+                    <div class="report-output">
+                        <div class="report-section">
+                            <h4>MOTIVO DE CONSULTA</h4>
+                            <p>${analysis.reason}</p>
+                        </div>
+                        <div class="report-section">
+                            <h4>ANAMNESIS Y SÍNTOMAS</h4>
+                            <p>${analysis.symptoms}</p>
+                        </div>
+                        <div class="report-section">
+                            <h4>ORIENTACIÓN DIAGNÓSTICA</h4>
+                            <p>${analysis.diagnosis}</p>
+                        </div>
+                        <div class="report-section">
+                            <h4>PLAN DE ACCIÓN Y TRATAMIENTO</h4>
+                            <p>${analysis.plan}</p>
+                        </div>
+                        <div class="report-section">
+                            <h4>TRANSCRIPCIÓN COMPLETA</h4>
+                            <p><i>${this.finalizedTranscript}</i></p>
+                        </div>
+                        <div style="text-align: right; margin-top: 20px; font-size: 0.9em; color: #777;">
+                            <p>Informe generado por AuraMed el ${generationDate}</p>
+                            <p><strong>Aviso:</strong> Este es un borrador generado por IA y debe ser validado por un profesional sanitario.</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new AuraMedApp();
+        });
+    </script>
+</body>
+</html>
+```
